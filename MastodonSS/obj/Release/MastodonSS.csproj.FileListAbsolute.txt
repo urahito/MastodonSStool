@@ -1,0 +1,13 @@
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\bin\Release\MastodonSS.exe.config
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\bin\Release\MastodonSS.exe
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\bin\Release\MastodonSS.pdb
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MainWindow.g.cs
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\App.g.cs
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS_MarkupCompile.cache
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS_MarkupCompile.lref
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MainWindow.baml
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS.g.resources
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS.Properties.Resources.resources
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS.csproj.GenerateResource.Cache
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS.exe
+C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\MastodonSS\obj\Release\MastodonSS.pdb
