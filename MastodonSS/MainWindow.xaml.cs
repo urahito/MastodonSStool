@@ -103,12 +103,12 @@ namespace MastodonSS
             // Twitter用は、ハッシュタグ付きでない、タイトル無しまたは本文無しではコピー不可
             if (blnForTwitter)
             {
-                if (!blnHashtag || CanCopyArticle()) return;
+                if (!blnHashtag || !CanCopyArticle()) return;
             }
             // Mastodon用は、タイトルまたは本文無しではコピー不可
             else
             {
-                if (CanCopyArticle()) return;
+                if (!CanCopyArticle()) return;
             }
 
             Clipboard.SetText(strArticle);

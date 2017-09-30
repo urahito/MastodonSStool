@@ -25,3 +25,17 @@ C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\obj\Debug\MastodonSS.Pro
 C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\obj\Debug\MastodonSS.csproj.GenerateResource.Cache
 C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\obj\Debug\MastodonSS.exe
 C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\obj\Debug\MastodonSS.pdb
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\bin\Debug\MastodonSS.exe.config
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\bin\Debug\MastodonSS.exe
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\bin\Debug\MastodonSS.pdb
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.csprojResolveAssemblyReference.cache
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MainWindow.g.cs
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\App.g.cs
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS_MarkupCompile.cache
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS_MarkupCompile.lref
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MainWindow.baml
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.g.resources
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.Properties.Resources.resources
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.csproj.GenerateResource.Cache
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.exe
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.pdb
