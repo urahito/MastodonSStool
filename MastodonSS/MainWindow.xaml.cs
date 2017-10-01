@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,10 +21,14 @@ namespace MastodonSS
     /// </summary>
     public partial class MainWindow : Window
     {
+        FileUtility fUtl;
+
+        private Timer backupTimer;
         private bool blnCanCopy;
         private bool blnHashtag;
         private bool blnForTwitter;
         private string strArticle;
+        private string strBackArticle;
         private string strTitle;
 
         public MainWindow()
@@ -39,6 +44,12 @@ namespace MastodonSS
         /// <param name="e"></param>
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            fUtl = new FileUtility();
+
+            backupTimer = new Timer(60000);
+            backupTimer.Elapsed += BackupTimer_Elapsed;
+            backupTimer.Start();
+
             tblkCount.Text = "0";
             strArticle = "";
             strTitle = "";
@@ -48,11 +59,27 @@ namespace MastodonSS
             blnHashtag = true;
             ckbHashtag.IsChecked = true;
 
-            cmbMaxChar.Items.Add(500);
-            cmbMaxChar.Items.Add(140);
+            cmbMaxChar.Items.Add(Properties.Settings.Default.MastodonLength);
+            cmbMaxChar.Items.Add(Properties.Settings.Default.TwitterLength);
             cmbMaxChar.SelectedIndex = 0;
 
             getArticle();
+        }
+
+        private void BackupTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            string strException = "";
+
+            // エラーチェック
+            if (string.IsNullOrEmpty(strBackArticle))
+            {
+                return;
+            }
+
+            if (fUtl.AutoBackup(new StringBuilder(strBackArticle), out strException) == false)
+            {
+                MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -132,7 +159,7 @@ namespace MastodonSS
         /// <param name="e"></param>
         private void cmbMaxChar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((int)cmbMaxChar.SelectedValue == 140)
+            if ((int)cmbMaxChar.SelectedValue == Properties.Settings.Default.TwitterLength)
             {
                 blnForTwitter = true;
                 blnHashtag = true;
@@ -142,11 +169,127 @@ namespace MastodonSS
             {
                 blnForTwitter = false;
             }
+
+            ProgBar.Maximum = (int)cmbMaxChar.SelectedValue;
             setTextCount(strArticle.Length);
+        }
+
+        /// <summary>
+        /// テキストファイルの読み込み
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuReadText_Click(object sender, RoutedEventArgs e)
+        {
+            string strContent = "";
+            string strException = "";
+
+            if (fUtl.ReadText(out strContent, out strException) == false)
+            {
+                MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                txbArticle.Text = strContent;
+            }
+        }
+
+        /// <summary>
+        /// バックアップファイルの読み込み
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuReadBackup_Click(object sender, RoutedEventArgs e)
+        {
+            string strContent = "";
+            string strException = "";
+
+            if (fUtl.ReadBackupFile(out strContent, out strException) == false)
+            {
+                MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                txbArticle.Text = strContent;
+            }
+        }
+
+        /// <summary>
+        /// 保存メニュークリック時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuSave_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder sb;
+            string strException = "";
+            string strTitle = txbTitle.Text;
+            int intSeq = 0;
+
+            // エラーチェック
+            if (string.IsNullOrEmpty(txbArticle.Text))
+            {
+                return;
+            }
+            else if (int.TryParse(txbNo.Text, out intSeq) == false)
+            {
+                return;
+            }
+            
+            sb = new StringBuilder(txbArticle.Text);
+
+            if (intSeq > 0 && strTitle.Length > 0)
+            {
+                fUtl = new FileUtility(strTitle, intSeq);
+            }
+            else if (strTitle.Length > 0)
+            {
+                fUtl = new FileUtility(strTitle);
+            }
+            else
+            {
+                fUtl = new FileUtility();
+            }
+
+            if (fUtl.SaveFile(sb, out strException) == true)
+            {
+                MessageBox.Show(strException, "完了", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        
+
+        /// <summary>
+        /// 終了メニュークリック時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuQuit_Click(object sender, RoutedEventArgs e)
+        {
+            EndAppProcess();
+            this.Close();
+        }
+
+        /// <summary>
+        /// アプリを終了するとき
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
         }
         #endregion
 
         #region 画面連携
+        /// <summary>
+        /// コピーが可能か判定
+        /// </summary>
+        /// <returns></returns>
         private bool CanCopyArticle()
         {
             return !(CommonUtility.IsNoArticle(txbTitle.Text) || CommonUtility.IsNoArticle(txbArticle.Text));
@@ -160,15 +303,13 @@ namespace MastodonSS
             // ハッシュタグの切り替えを反映
             if(ckbHashtag.IsChecked == true)
             {
-                strArticle = "#" + txbTitle.Text + "\r\n";
+                strArticle = string.Format("#{0}\r\n{1}", txbTitle.Text, txbArticle.Text);
             }
             else
             {
-                strArticle = "";
+                strArticle = txbArticle.Text;
             }
-
-            // 本文を追記
-            strArticle = strArticle + txbArticle.Text;
+            strBackArticle = txbArticle.Text;
 
             // 文字数を反映
             setTextCount(strArticle.Length);
@@ -183,13 +324,14 @@ namespace MastodonSS
             // 本文を取得
             getArticle();
             
-            // タイトルを取得（ナンバリングがあればそれを追記）
-            strTitle = txbTitle.Text + " " + txbNo.Text;
-
             // ナンバリングが有効な数字でない場合、タイトルのみにする
             if (CommonUtility.IsInt(txbNo.Text) == false)
             {
                 strTitle = txbTitle.Text;
+            }
+            else
+            {
+                strTitle = txbTitle.Text + " " + txbNo.Text;
             }
 
             // 文字数を反映
@@ -205,6 +347,7 @@ namespace MastodonSS
         {
             // 文字数を反映
             tblkCount.Text = txtLen.ToString();
+            ProgBar.Value = txtLen;
 
             // 文字数オーバー時は赤で表示
             if (txtLen > (int)cmbMaxChar.SelectedValue)
@@ -223,6 +366,20 @@ namespace MastodonSS
             {
                 tblkCount.Foreground = Brushes.Black;
                 blnCanCopy = true;
+            }
+        }
+
+        /// <summary>
+        /// 終了プロセス
+        /// </summary>
+        private void EndAppProcess()
+        {
+            string strException = "バックアップの削除に失敗しました。";
+            backupTimer.Stop();
+            
+            if (fUtl.DeleteBackup(out strException) == false)
+            {
+                MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         #endregion

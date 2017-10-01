@@ -28,7 +28,6 @@ C:\Users\ayumu\Documents\Projects\MastodonSS\MastodonSS\obj\Debug\MastodonSS.pdb
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\bin\Debug\MastodonSS.exe.config
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\bin\Debug\MastodonSS.exe
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\bin\Debug\MastodonSS.pdb
-C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.csprojResolveAssemblyReference.cache
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MainWindow.g.cs
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\App.g.cs
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS_MarkupCompile.cache
