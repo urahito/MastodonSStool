@@ -36,6 +36,16 @@ namespace MastodonSS
             InitializeComponent();
         }
 
+        #region プロパティ
+        private int ArticleLength
+        {
+            get
+            {
+                return strArticle.Replace("\r\n", "\n").Length;
+            }
+        }
+        #endregion
+
         #region イベント
         /// <summary>
         /// 初期化メソッド
@@ -61,8 +71,9 @@ namespace MastodonSS
 
             cmbMaxChar.Items.Add(Properties.Settings.Default.MastodonLength);
             cmbMaxChar.Items.Add(Properties.Settings.Default.TwitterLength);
+            cmbMaxChar.Items.Add(Properties.Settings.Default.TwitterLongLength);
             cmbMaxChar.SelectedIndex = 0;
-
+          
             getArticle();
         }
 
@@ -159,7 +170,7 @@ namespace MastodonSS
         /// <param name="e"></param>
         private void cmbMaxChar_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((int)cmbMaxChar.SelectedValue == Properties.Settings.Default.TwitterLength)
+            if ((int)cmbMaxChar.SelectedValue != Properties.Settings.Default.MastodonLength)
             {
                 blnForTwitter = true;
                 blnHashtag = true;
@@ -171,7 +182,7 @@ namespace MastodonSS
             }
 
             ProgBar.Maximum = (int)cmbMaxChar.SelectedValue;
-            setTextCount(strArticle.Length);
+            setTextCount();
         }
 
         /// <summary>
@@ -227,31 +238,22 @@ namespace MastodonSS
             int intSeq = 0;
 
             // エラーチェック
-            if (string.IsNullOrEmpty(txbArticle.Text))
+            if (CommonUtility.IsNoArticle(txbArticle.Text))
             {
                 return;
             }
-            else if (int.TryParse(txbNo.Text, out intSeq) == false)
+            else if (CommonUtility.IsInt(txbNo.Text) == false)
             {
                 return;
             }
-            
-            sb = new StringBuilder(txbArticle.Text);
-
-            if (intSeq > 0 && strTitle.Length > 0)
+            else if(!CommonUtility.IsNoArticle(txbNo.Text))
             {
-                fUtl = new FileUtility(strTitle, intSeq);
-            }
-            else if (strTitle.Length > 0)
-            {
-                fUtl = new FileUtility(strTitle);
-            }
-            else
-            {
-                fUtl = new FileUtility();
+                intSeq = int.Parse(txbNo.Text);
             }
 
-            if (fUtl.SaveFile(sb, out strException) == true)
+            fUtl.setTitle(strTitle, intSeq);
+
+            if (fUtl.SaveFile(new StringBuilder(txbArticle.Text), out strException) == true)
             {
                 MessageBox.Show(strException, "完了", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -312,7 +314,7 @@ namespace MastodonSS
             strBackArticle = txbArticle.Text;
 
             // 文字数を反映
-            setTextCount(strArticle.Length);
+            setTextCount();
             return;
         }
 
@@ -335,7 +337,7 @@ namespace MastodonSS
             }
 
             // 文字数を反映
-            setTextCount(strArticle.Length);
+            setTextCount();
             return;
         }
 
@@ -343,10 +345,12 @@ namespace MastodonSS
         /// 文字数を反映
         /// </summary>
         /// <param name="txtLen"></param>
-        private void setTextCount(int txtLen)
+        private void setTextCount()
         {
+            int txtLen = ArticleLength;
+
             // 文字数を反映
-            tblkCount.Text = txtLen.ToString();
+            tblkCount.Text = txtLen.ToString().PadLeft(4);
             ProgBar.Value = txtLen;
 
             // 文字数オーバー時は赤で表示

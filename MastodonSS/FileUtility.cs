@@ -30,30 +30,7 @@ namespace MastodonSS
         public FileUtility()
         {
             getDefault();
-            fileName = string.Format("{0}.txt", strToday);
-        }
-
-        /// <summary>
-        /// ファイル入出力クラス
-        /// </summary>
-        /// <param name="strTitle">タイトル</param>
-        public FileUtility(string strTitle)
-        {
-            getDefault();
-            fileName = string.Format("{0}-{1}.txt", strTitle, strToday);
-        }
-
-        /// <summary>
-        /// ファイル入出力クラス
-        /// </summary>
-        /// <param name="strTitle">タイトル</param>
-        /// <param name="seqNo">番号</param>
-        public FileUtility(string strTitle, int seqNo)
-        {
-            string seqFormat = Properties.Settings.Default.SequenceFormat;
-
-            getDefault();
-            fileName = string.Format("{0}-{1}-{2}.txt", strTitle, seqNo.ToString(seqFormat), strToday);
+            setTitle("", 0);
         }
 
         /// <summary>
@@ -72,6 +49,35 @@ namespace MastodonSS
         {
             strNowTime = DateTime.Now.ToString("yyyyMMddhhmmss");
             backupFileName = string.Format("{0}.bak", strNowTime);
+        }
+
+        /// <summary>
+        /// タイトルの取得
+        /// </summary>
+        /// <param name="strTitle"></param>
+        /// <param name="seqNo"></param>
+        public void setTitle(string strTitle, int seqNo)
+        {
+            string seqFormat = Properties.Settings.Default.SequenceFormat;
+            string strSeq = "";
+            fileName = "";
+
+            if (seqNo > 0)
+            {
+                strSeq = seqNo.ToString(seqFormat);
+            }
+
+            if (strTitle.Length > 0)
+            {
+                fileName = string.Concat(strTitle, "-");
+            }
+
+            if (strSeq.Length > 0)
+            {
+                fileName = string.Concat(fileName, strSeq, "-");
+            }
+
+            fileName = string.Concat(fileName, strToday, ".txt");
         }
         #endregion
 
@@ -148,18 +154,33 @@ namespace MastodonSS
 
             string backDirPath = Path.Combine(defDirPath, "MastodonSS_bak");
             string backFilePath = Path.Combine(backDirPath, backupFileName);
+            int leftFileCount = Properties.Settings.Default.LeftFile;
             strException = "";
 
             try
             {
+                // バックアップ用フォルダの確保
                 if (!Directory.Exists(backDirPath))
                 {
                     Directory.CreateDirectory(backDirPath);
                 }
 
+                // テキストのバックアップ
                 File.WriteAllText(backFilePath, sb.ToString());
 
+                #region バックアップのリスト追加・最新5世代以外削除
                 backupList.Add(backFilePath);
+
+                for(int idx = 0; idx < backupList.Count - leftFileCount; idx++)
+                {
+                    string filePath = backupList[idx];
+
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+                #endregion
             }
             #region catch句
             catch (FileNotFoundException ex)

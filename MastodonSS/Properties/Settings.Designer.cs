@@ -41,15 +41,30 @@ namespace MastodonSS.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("##00")]
         public string SequenceFormat {
             get {
                 return ((string)(this["SequenceFormat"]));
             }
-            set {
-                this["SequenceFormat"] = value;
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int LeftFile {
+            get {
+                return ((int)(this["LeftFile"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("280")]
+        public int TwitterLongLength {
+            get {
+                return ((int)(this["TwitterLongLength"]));
             }
         }
     }
