@@ -346,6 +346,7 @@ namespace MastodonSS
             {
                 oneUtl = new OneWriUtility();
                 MenuOneHourStart.IsEnabled = false;
+                MenuOneWriEnd.IsEnabled = true;
             }
         }
 
