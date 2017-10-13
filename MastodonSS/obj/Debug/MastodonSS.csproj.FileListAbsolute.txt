@@ -38,3 +38,4 @@ C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.csproj.GenerateResource.Cache
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.exe
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.pdb
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Debug\MastodonSS.csprojResolveAssemblyReference.cache

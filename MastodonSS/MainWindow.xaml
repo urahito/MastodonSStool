@@ -13,7 +13,7 @@
         <TextBox x:Name="txbNo" HorizontalAlignment="Left" Height="23" Margin="366,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="141" TabIndex="2"/>
         <Button x:Name="btnCopyArticle" Content="本文コピー" HorizontalAlignment="Left" Height="21" Margin="366,64,0,0" VerticalAlignment="Top" Width="141" Click="btnCopyArticle_Click" TabIndex="6"/>
         <Button x:Name="btnCopyTitle" Content="CW(ﾀｲﾄﾙ)コピー" HorizontalAlignment="Left" Height="21" Margin="220,64,0,0" VerticalAlignment="Top" Width="141" Click="btnCopyTitle_Click" TabIndex="5"/>
-        <TextBox x:Name="txbArticle" HorizontalAlignment="Left" Margin="10,131,0,10" TextWrapping="Wrap" Width="497" TextChanged="txbArticle_TextChanged" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TabIndex="3"/>
+        <TextBox x:Name="txbArticle" HorizontalAlignment="Left" Margin="10,131,0,0" TextWrapping="Wrap" Width="497" TextChanged="txbArticle_TextChanged" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TabIndex="3" Height="180" VerticalAlignment="Top"/>
         <Label x:Name="label2" Content="/" HorizontalAlignment="Left" Margin="63,61,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cmbMaxChar" HorizontalAlignment="Left" Margin="78,63,0,0" VerticalAlignment="Top" Width="55" TabIndex="4" SelectionChanged="cmbMaxChar_SelectionChanged"/>
         <TextBlock x:Name="tblkCount" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="53"/>
@@ -27,8 +27,19 @@
                 <MenuItem x:Name="MenuSave" Header="保存(_S)" Click="MenuSave_Click" />
                 <MenuItem x:Name="MenuQuit" Header="終了(_Q)" Click="MenuQuit_Click" />
             </MenuItem>
+            <MenuItem Header="ワンライ(_O)">
+                <MenuItem x:Name="MenuOneWriStart" Header="開始(_S)">
+                    <MenuItem x:Name="MenuOneHourStart" Header="1時間(_1)" Click="MenuOneHourStart_Click" />
+                </MenuItem>
+                <MenuItem x:Name="MenuOneWriEnd" Header="終了(_S)" Click="MenuOneWriEnd_Click" />
+            </MenuItem>
         </Menu>
         <ProgressBar x:Name="ProgBar" HorizontalAlignment="Left" Height="14" Margin="10,92,0,0" VerticalAlignment="Top" Width="497"/>
+        <StatusBar HorizontalAlignment="Left" Height="30" Margin="0,316,0,0" VerticalAlignment="Top" Width="517">
+            <StatusBarItem x:Name="StsLblOneWri" Content=""  Height="30" VerticalAlignment="Top"/>
+            <Separator />
+            <StatusBarItem x:Name="StsLblStatus" Content=""  Height="30" VerticalAlignment="Top"/>
+        </StatusBar>
 
     </Grid>
 </Window>

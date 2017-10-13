@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MastodonSS.Utility;
+using MastodonSS.Utility.OneWri;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace MastodonSS
 {
@@ -22,8 +25,14 @@ namespace MastodonSS
     public partial class MainWindow : Window
     {
         FileUtility fUtl;
+        OneWriUtility oneUtl;
+
+        public TimeSpan OneWriSpan;
 
         private Timer backupTimer;
+        private DispatcherTimer oneWriTimer;
+        private DateTime timeLimit;
+
         private bool blnCanCopy;
         private bool blnHashtag;
         private bool blnForTwitter;
@@ -60,6 +69,28 @@ namespace MastodonSS
             backupTimer.Elapsed += BackupTimer_Elapsed;
             backupTimer.Start();
 
+            #region DispatcherTimer
+            oneWriTimer = new DispatcherTimer(DispatcherPriority.Normal);
+            oneWriTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+            oneWriTimer.Tick += new EventHandler((s, ev) =>
+            {
+                if (oneUtl != null)
+                {
+                    StsLblOneWri.Content = oneUtl.GetLeftTime;
+                }
+                else
+                {
+                    StsLblOneWri.Content = string.Empty;
+                }
+
+                if (DateTime.Now >= timeLimit)
+                {
+                    StsLblStatus.Content = string.Empty;
+                }
+            });
+            oneWriTimer.Start();
+            #endregion
+
             tblkCount.Text = "0";
             strArticle = "";
             strTitle = "";
@@ -68,6 +99,8 @@ namespace MastodonSS
             blnForTwitter = false;
             blnHashtag = true;
             ckbHashtag.IsChecked = true;
+            
+            MenuOneWriEnd.IsEnabled = false;
 
             cmbMaxChar.Items.Add(Properties.Settings.Default.MastodonLength);
             cmbMaxChar.Items.Add(Properties.Settings.Default.TwitterLength);
@@ -77,6 +110,7 @@ namespace MastodonSS
             getArticle();
         }
 
+        #region タイマーイベント
         private void BackupTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             string strException = "";
@@ -92,6 +126,7 @@ namespace MastodonSS
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        #endregion
 
         /// <summary>
         /// 現在の本文を記録
@@ -201,6 +236,8 @@ namespace MastodonSS
             }
             else
             {
+                StsLblStatus.Content = "読み込みに成功しました";
+                timeLimit = DateTime.Now.AddSeconds(5);
                 txbArticle.Text = strContent;
             }
         }
@@ -221,6 +258,8 @@ namespace MastodonSS
             }
             else
             {
+                StsLblStatus.Content = "読み込みに成功しました";
+                timeLimit = DateTime.Now.AddSeconds(5);
                 txbArticle.Text = strContent;
             }
         }
@@ -255,7 +294,8 @@ namespace MastodonSS
 
             if (fUtl.SaveFile(new StringBuilder(txbArticle.Text), out strException) == true)
             {
-                MessageBox.Show(strException, "完了", MessageBoxButton.OK, MessageBoxImage.Information);
+                StsLblStatus.Content = "保存に成功しました";
+                timeLimit = DateTime.Now.AddSeconds(5);
             }
             else
             {
@@ -284,6 +324,36 @@ namespace MastodonSS
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
+        }
+
+        /// <summary>
+        /// ワンライ開始
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuOneHourStart_Click(object sender, RoutedEventArgs e)
+        {
+            if(MessageBox.Show("開始します", "ワンライ", 
+                MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
+            {
+                oneUtl = new OneWriUtility();
+                MenuOneHourStart.IsEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// ワンライ終了
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MenuOneWriEnd_Click(object sender, RoutedEventArgs e)
+        {
+            if(oneUtl.Stop())
+            {
+                MenuOneHourStart.IsEnabled = true;
+                MenuOneWriEnd.IsEnabled = false;
+                oneUtl = null;
+            }
         }
         #endregion
 
