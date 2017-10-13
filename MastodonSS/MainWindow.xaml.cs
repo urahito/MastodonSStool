@@ -74,13 +74,21 @@ namespace MastodonSS
             oneWriTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
             oneWriTimer.Tick += new EventHandler((s, ev) =>
             {
-                if (oneUtl != null)
+                
+                if (oneUtl == null)
                 {
-                    StsLblOneWri.Content = oneUtl.GetLeftTime;
+                    StsLblOneWri.Content = string.Empty;
+                }
+                else if (oneUtl.GetTimerEnabled == false)
+                {
+                    oneUtl = null;
+                    MenuOneHourStart.IsEnabled = true;
+                    MenuOneWriEnd.IsEnabled = false;
+                    StsLblOneWri.Content = string.Empty;
                 }
                 else
                 {
-                    StsLblOneWri.Content = string.Empty;
+                    StsLblOneWri.Content = oneUtl.GetLeftTime;
                 }
 
                 if (DateTime.Now >= timeLimit)

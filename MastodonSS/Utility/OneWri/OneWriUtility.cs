@@ -23,6 +23,14 @@ namespace MastodonSS.Utility.OneWri
                 return string.Format("終了予定→ {0} / 残り→ {1}", timeLimit.ToShortTimeString(), leftTime.ToString("hh\\:mm\\:ss"));
             }
         }
+
+        public bool GetTimerEnabled
+        {
+            get
+            {
+                return tm.Enabled;
+            }
+        }
         #endregion
 
         #region コンストラクタ
