@@ -32,6 +32,7 @@ namespace MastodonSS
         private Timer backupTimer;
         private DispatcherTimer oneWriTimer;
         private DateTime timeLimit;
+        private EventHandler eHander;
 
         private bool blnCanCopy;
         private bool blnHashtag;
@@ -43,6 +44,11 @@ namespace MastodonSS
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private enum TimerMode{
+            Hour1,
+            Off
         }
 
         #region プロパティ
@@ -77,13 +83,13 @@ namespace MastodonSS
                 
                 if (oneUtl == null)
                 {
+                    SetEnabled(TimerMode.Off);
                     StsLblOneWri.Content = string.Empty;
                 }
                 else if (oneUtl.GetTimerEnabled == false)
                 {
                     oneUtl = null;
-                    MenuOneHourStart.IsEnabled = true;
-                    MenuOneWriEnd.IsEnabled = false;
+                    SetEnabled(TimerMode.Off);
                     StsLblOneWri.Content = string.Empty;
                 }
                 else
@@ -345,8 +351,7 @@ namespace MastodonSS
                 MessageBoxButton.OKCancel, MessageBoxImage.Information) == MessageBoxResult.OK)
             {
                 oneUtl = new OneWriUtility();
-                MenuOneHourStart.IsEnabled = false;
-                MenuOneWriEnd.IsEnabled = true;
+                SetEnabled(TimerMode.Hour1);
             }
         }
 
@@ -359,8 +364,7 @@ namespace MastodonSS
         {
             if(oneUtl.Stop())
             {
-                MenuOneHourStart.IsEnabled = true;
-                MenuOneWriEnd.IsEnabled = false;
+                SetEnabled(TimerMode.Off);
                 oneUtl = null;
             }
         }
@@ -463,6 +467,21 @@ namespace MastodonSS
             if (fUtl.DeleteBackup(out strException) == false)
             {
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SetEnabled(TimerMode mode)
+        {
+            switch(mode)
+            {
+                case TimerMode.Hour1:
+                    MenuOneHourStart.IsEnabled = false;
+                    MenuOneWriEnd.IsEnabled = true;
+                    break;
+                default:
+                    MenuOneHourStart.IsEnabled = true;
+                    MenuOneWriEnd.IsEnabled = false;
+                    break;
             }
         }
         #endregion

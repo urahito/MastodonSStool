@@ -24,3 +24,4 @@ C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Release\Mastodon
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Release\MastodonSS.csproj.GenerateResource.Cache
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Release\MastodonSS.exe
 C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Release\MastodonSS.pdb
+C:\Users\ayumu\Documents\Projects\MastodonSStool\MastodonSS\obj\Release\MastodonSS.csprojResolveAssemblyReference.cache

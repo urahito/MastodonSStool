@@ -7,17 +7,6 @@
         mc:Ignorable="d"
         Title="マストドン用ライターツール" Height="377.415" Width="525" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
-        <Label x:Name="label" Content="タイトル" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Width="48"/>
-        <TextBox x:Name="txbTitle" HorizontalAlignment="Left" Height="23" Margin="63,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="255" TextChanged="txbTitle_TextChanged" TabIndex="1"/>
-        <Label x:Name="label1" Content="No." HorizontalAlignment="Left" Margin="332,32,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txbNo" HorizontalAlignment="Left" Height="23" Margin="366,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="141" TabIndex="2"/>
-        <Button x:Name="btnCopyArticle" Content="本文コピー" HorizontalAlignment="Left" Height="21" Margin="366,64,0,0" VerticalAlignment="Top" Width="141" Click="btnCopyArticle_Click" TabIndex="6"/>
-        <Button x:Name="btnCopyTitle" Content="CW(ﾀｲﾄﾙ)コピー" HorizontalAlignment="Left" Height="21" Margin="220,64,0,0" VerticalAlignment="Top" Width="141" Click="btnCopyTitle_Click" TabIndex="5"/>
-        <TextBox x:Name="txbArticle" HorizontalAlignment="Left" Margin="10,131,0,0" TextWrapping="Wrap" Width="497" TextChanged="txbArticle_TextChanged" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TabIndex="3" Height="180" VerticalAlignment="Top"/>
-        <Label x:Name="label2" Content="/" HorizontalAlignment="Left" Margin="63,61,0,0" VerticalAlignment="Top"/>
-        <ComboBox x:Name="cmbMaxChar" HorizontalAlignment="Left" Margin="78,63,0,0" VerticalAlignment="Top" Width="55" TabIndex="4" SelectionChanged="cmbMaxChar_SelectionChanged"/>
-        <TextBlock x:Name="tblkCount" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="53"/>
-        <CheckBox x:Name="ckbHashtag" Content="ハッシュタグ付き投稿" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Click="ckbHashtag_Click"/>
         <Menu x:Name="menu" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="517">
             <MenuItem Header="ファイル(_F)">
                 <MenuItem x:Name="MenuRead" Header="読込(_O)">
@@ -34,12 +23,24 @@
                 <MenuItem x:Name="MenuOneWriEnd" Header="終了(_S)" Click="MenuOneWriEnd_Click" />
             </MenuItem>
         </Menu>
-        <ProgressBar x:Name="ProgBar" HorizontalAlignment="Left" Height="14" Margin="10,92,0,0" VerticalAlignment="Top" Width="497"/>
-        <StatusBar HorizontalAlignment="Left" Height="30" Margin="0,316,0,0" VerticalAlignment="Top" Width="517">
+        <Grid Grid.Row="1">
+            <Label x:Name="label" Content="タイトル" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Width="48"/>
+            <TextBox x:Name="txbTitle" HorizontalAlignment="Left" Height="23" Margin="63,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="255" TextChanged="txbTitle_TextChanged" TabIndex="1"/>
+            <Label x:Name="label1" Content="No." HorizontalAlignment="Left" Margin="332,32,0,0" VerticalAlignment="Top" Width="150"/>
+            <TextBox x:Name="txbNo" HorizontalAlignment="Left" Height="23" Margin="366,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="141" TabIndex="2"/>
+            <Button x:Name="btnCopyArticle" Content="本文コピー" HorizontalAlignment="Left" Height="21" Margin="366,64,0,0" VerticalAlignment="Top" Width="141" Click="btnCopyArticle_Click" TabIndex="6"/>
+            <Button x:Name="btnCopyTitle" Content="CW(ﾀｲﾄﾙ)コピー" HorizontalAlignment="Left" Margin="220,64,0,0" Width="141" Click="btnCopyTitle_Click" TabIndex="5" Height="21" VerticalAlignment="Top"/>
+            <TextBox x:Name="txbArticle" HorizontalAlignment="Left" Margin="10,131,0,0" TextWrapping="Wrap" Width="497" TextChanged="txbArticle_TextChanged" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" TabIndex="3" Height="180" VerticalAlignment="Top"/>
+            <Label x:Name="label2" Content="/" HorizontalAlignment="Left" Margin="63,61,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="cmbMaxChar" HorizontalAlignment="Left" Margin="78,63,0,0" VerticalAlignment="Top" Width="55" TabIndex="4" SelectionChanged="cmbMaxChar_SelectionChanged"/>
+            <TextBlock x:Name="tblkCount" HorizontalAlignment="Left" Margin="10,66,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="53"/>
+            <CheckBox x:Name="ckbHashtag" Content="ハッシュタグ付き投稿" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Click="ckbHashtag_Click"/>
+            <ProgressBar x:Name="ProgBar" HorizontalAlignment="Left" Height="14" Margin="10,92,0,0" VerticalAlignment="Top" Width="497"/>
+        </Grid>
+        <StatusBar x:Name="StsBar" HorizontalAlignment="Left" Margin="0,316,0,0" Width="517" VerticalContentAlignment="Bottom">
             <StatusBarItem x:Name="StsLblOneWri" Content=""  Height="30" VerticalAlignment="Top"/>
             <Separator />
-            <StatusBarItem x:Name="StsLblStatus" Content=""  Height="30" VerticalAlignment="Top"/>
+            <StatusBarItem x:Name="StsLblStatus" Content=""/>
         </StatusBar>
-
     </Grid>
 </Window>

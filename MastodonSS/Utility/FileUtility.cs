@@ -286,6 +286,11 @@ namespace MastodonSS.Utility
             {
                 OpenFilePath = pfd.FileName;
             }
+            else
+            {
+                strException = "ファイルが選択されませんでした。";
+                return true;
+            }
 
             try
             {
@@ -346,6 +351,11 @@ namespace MastodonSS.Utility
             if (pfd.ShowDialog() == true)
             {
                 OpenFilePath = pfd.FileName;
+            }
+            else
+            {
+                strException = "ファイルが選択されませんでした。";
+                return true;
             }
 
             try
