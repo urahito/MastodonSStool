@@ -108,7 +108,7 @@ namespace MastodonSS.Utility
 
             try
             {
-                File.WriteAllText(filePath, sb.ToString());
+                System.IO.File.WriteAllText(filePath, sb.ToString());
             }
             #region catch句
             catch(FileNotFoundException ex)
@@ -166,7 +166,7 @@ namespace MastodonSS.Utility
                 }
 
                 // テキストのバックアップ
-                File.WriteAllText(backFilePath, sb.ToString());
+                System.IO.File.WriteAllText(backFilePath, sb.ToString());
 
                 #region バックアップのリスト追加・最新5世代以外削除
                 backupList.Add(backFilePath);
@@ -175,9 +175,9 @@ namespace MastodonSS.Utility
                 {
                     string filePath = backupList[idx];
 
-                    if (File.Exists(filePath))
+                    if (System.IO.File.Exists(filePath))
                     {
-                        File.Delete(filePath);
+                        System.IO.File.Delete(filePath);
                     }
                 }
                 #endregion
@@ -226,9 +226,9 @@ namespace MastodonSS.Utility
             {
                 foreach (string backFilePath in backupList)
                 {
-                    if (File.Exists(backFilePath))
+                    if (System.IO.File.Exists(backFilePath))
                     {
-                        File.Delete(backFilePath);
+                        System.IO.File.Delete(backFilePath);
                     }
                 }
             }
@@ -296,9 +296,9 @@ namespace MastodonSS.Utility
             {
                 if (ReadTextAll(OpenFilePath, out content, out strException))
                 {
-                    if (File.Exists(OpenFilePath))
+                    if (System.IO.File.Exists(OpenFilePath))
                     {
-                        File.Delete(OpenFilePath);
+                        System.IO.File.Delete(OpenFilePath);
                     }
                 }
                 else
@@ -362,9 +362,9 @@ namespace MastodonSS.Utility
             {
                 if(ReadTextAll(OpenFilePath, out content, out strException))
                 {
-                    if (File.Exists(OpenFilePath))
+                    if (System.IO.File.Exists(OpenFilePath))
                     {
-                        File.Delete(OpenFilePath);
+                        System.IO.File.Delete(OpenFilePath);
                     }
                 }
                 else

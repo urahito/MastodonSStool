@@ -1,4 +1,5 @@
 ﻿using MastodonSS.Utility;
+using MastodonSS.Utility.File;
 using MastodonSS.Utility.OneWri;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace MastodonSS
     {
         FileUtility fUtl;
         OneWriUtility oneUtl;
+        BackupClass backupList;
 
         public TimeSpan OneWriSpan;
 
@@ -70,6 +72,7 @@ namespace MastodonSS
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             fUtl = new FileUtility();
+            backupList = new BackupClass();
 
             backupTimer = new Timer(60000);
             backupTimer.Elapsed += BackupTimer_Elapsed;
@@ -127,7 +130,7 @@ namespace MastodonSS
         #region タイマーイベント
         private void BackupTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            string strException = "";
+            string strException = "ファイルのバックアップに失敗しました";
 
             // エラーチェック
             if (string.IsNullOrEmpty(strBackArticle))
@@ -135,10 +138,15 @@ namespace MastodonSS
                 return;
             }
 
-            if (fUtl.AutoBackup(new StringBuilder(strBackArticle), out strException) == false)
+            if (backupList.AutoBackup(strBackArticle) == false)
             {
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+            //if (fUtl.AutoBackup(new StringBuilder(strBackArticle), out strException) == false)
+            //{
+            //    MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
         #endregion
 
@@ -463,11 +471,16 @@ namespace MastodonSS
         {
             string strException = "バックアップの削除に失敗しました。";
             backupTimer.Stop();
-            
-            if (fUtl.DeleteBackup(out strException) == false)
+
+            if (backupList.AllDelete() == false)
             {
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            
+            //if (fUtl.DeleteBackup(out strException) == false)
+            //{
+            //    MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         private void SetEnabled(TimerMode mode)
