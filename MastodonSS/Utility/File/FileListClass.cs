@@ -9,39 +9,32 @@ namespace MastodonSS.Utility.File
 {
     public class FileListClass : ICollection<FileClass>
     {
-        Queue<FileClass> _queue = new Queue<FileClass>();
+        LinkedList<FileClass> _list = new LinkedList<FileClass>();
         string _subDir = "";
+        private int Capacity;
 
         /// <summary>
         /// コンストラクタ（空）
         /// </summary>
-        public FileListClass()
+        public FileListClass(int intCapacity)
         {
-
+            Capacity = intCapacity;
         }
 
         /// <summary>
         /// ファイル名が決まっている場合、キューに追加
         /// </summary>
         /// <param name="fileName"></param>
-        public FileListClass(string fileName)
-        {
-            _queue.Enqueue(new FileClass(_subDir, fileName));
-        }
-
-        /// <summary>
-        /// ファイル名が決まっている場合、キューに追加
-        /// </summary>
-        /// <param name="fileName"></param>
-        public FileListClass(string subDir, string fileName)
+        public FileListClass(string subDir, int intCapacity)
         {
             _subDir = subDir;
+            Capacity = intCapacity;
         }
 
         /// <summary>
         /// キューの残数
         /// </summary>
-        public int Count => _queue.Count;
+        public int Count => _list.Count;
 
         /// <summary>
         /// 読み取り専用フラグ
@@ -54,7 +47,7 @@ namespace MastodonSS.Utility.File
         /// <param name="fileName"></param>
         public void Add(string fileName)
         {
-            _queue.Enqueue(new FileClass(_subDir, fileName));
+            _list.AddLast(new FileClass(_subDir, fileName));
         }
 
         /// <summary>
@@ -73,29 +66,39 @@ namespace MastodonSS.Utility.File
                 return;
             }
 
-            if (_queue.Count == 0)
+            if (_list.Count == 0)
             {
                 fn = new FileClass(_subDir, fileName);   // インスタンス化
                 fn.CreateText(content);                  // テキストの作成
-                _queue.Enqueue(fn);                      // キューに追加
+                _list.AddLast(fn);                      // キューに追加
             }
             else
             {
                 // 最新ファイルとの比較準備
                 fn = new FileClass(_subDir, fileName);
-                FileClass before = _queue.Peek();
+                FileClass before = _list.Last();
 
                 // 最新ファイルとの比較（ハッシュ比較）
-                if (before.Compare(content) == false)
+                if (before.Compare(content) == true)    // 最新ファイルと現在のテキストが同じ
                 {
-                    before = _queue.Dequeue();      // 古いファイルをキューから出す
-                    if (Remove(before) == false)    // 古いファイルを削除
+                    before = _list.Last();      
+                    if (Remove(before) == true)         // 最新ファイルを削除
                     {
-                        _queue.Enqueue(before);     // 古いファイルが削除出来ない場合、キューに戻す
-                    }
+                        _list.RemoveLast();             // 新しい名前で保存するためリストから削除
+                    }                    
+                }
 
-                    fn.CreateText(content);         // テキストの作成
-                    _queue.Enqueue(fn);             // キューに追加
+                fn.CreateText(content);         // テキストの作成
+                _list.AddLast(fn);              // リストに追加（リネーム）
+
+                // 最新数世代までの保存（世代数より古いものは削除）
+                while (_list.Count > Capacity)
+                {
+                    FileClass fc = _list.First();
+                    if (Remove(fc) == true)       // 古いファイルを削除出来たとき
+                    {
+                        _list.RemoveFirst();      // 古いファイルをリストから削除する
+                    }
                 }
             }
         }
@@ -106,7 +109,7 @@ namespace MastodonSS.Utility.File
         /// <param name="item"></param>
         public void Add(FileClass item)
         {
-            _queue.Enqueue(item);
+            _list.AddLast(item);
         }
 
         /// <summary>
@@ -114,11 +117,11 @@ namespace MastodonSS.Utility.File
         /// </summary>
         public void Clear()
         {
-            foreach (FileClass fc in _queue)
+            foreach (FileClass fc in _list)
             {
                 Remove(fc);
             }
-            _queue.Clear();
+            _list.Clear();
         }
 
         /// <summary>
@@ -128,7 +131,7 @@ namespace MastodonSS.Utility.File
         /// <returns></returns>
         public bool Contains(string fileName)
         {
-            foreach(FileClass fc in _queue)
+            foreach(FileClass fc in _list)
             {
                 if(fc.Contains(fileName))
                 {
@@ -166,11 +169,13 @@ namespace MastodonSS.Utility.File
         /// <returns></returns>
         public bool Remove(FileClass item)
         {
+            bool result = false;
+
             if (item.Extension.Contains(".bak"))
             {
-                if(Contains(item.FileName))
+                if(item.Exists)
                 {
-                    item.Delete();
+                    result = item.Delete();
                     item.Dispose();
                 }
             }
@@ -179,18 +184,18 @@ namespace MastodonSS.Utility.File
                 return false;
             }
 
-            return true;
+            return result;
         }
 
         #region 使用用途の無いメソッド
         public void CopyTo(FileClass[] array, int arrayIndex)
         {
-            _queue.CopyTo(array, arrayIndex);
+            _list.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<FileClass> GetEnumerator()
         {
-            return _queue.GetEnumerator();
+            return _list.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

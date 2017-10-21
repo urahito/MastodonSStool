@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MastodonSS.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace MastodonSS.Utility.File
 
             if (fList == null)
             {
-                fList = new FileListClass("MastodonSS_bak", fileName);
+                fList = new FileListClass("MastodonSS_bak", Settings.Default.LeftFile);
             }
 
             try
@@ -54,7 +55,7 @@ namespace MastodonSS.Utility.File
 
             if (fList == null)
             {
-                fList = new FileListClass("\\MastodonSS_bak", fi.Name);
+                fList = new FileListClass("\\MastodonSS_bak", 0);
             }
 
             try

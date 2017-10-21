@@ -28,6 +28,7 @@ namespace MastodonSS
         FileUtility fUtl;
         OneWriUtility oneUtl;
         BackupClass backupList;
+        FileClass fCls;
 
         public TimeSpan OneWriSpan;
 
@@ -72,6 +73,7 @@ namespace MastodonSS
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             fUtl = new FileUtility();
+            fCls = new FileClass("", string.Concat(DateTime.Now.ToString("yyyyMMdd"), ".txt"));
             backupList = new BackupClass();
 
             backupTimer = new Timer(60000);
@@ -312,9 +314,10 @@ namespace MastodonSS
                 intSeq = int.Parse(txbNo.Text);
             }
 
-            fUtl.setTitle(strTitle, intSeq);
+            // fUtl.setTitle(strTitle, intSeq);
 
-            if (fUtl.SaveFile(new StringBuilder(txbArticle.Text), out strException) == true)
+            // fUtl.SaveFile(new StringBuilder(txbArticle.Text), out strException) == true
+            if (fCls.SaveFile(strArticle, strTitle, intSeq) == true)
             {
                 StsLblStatus.Content = "保存に成功しました";
                 timeLimit = DateTime.Now.AddSeconds(5);
