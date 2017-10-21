@@ -55,7 +55,7 @@ namespace MastodonSS.Utility.File
 
             if (fList == null)
             {
-                fList = new FileListClass("\\MastodonSS_bak", 0);
+                fList = new FileListClass("MastodonSS_bak", 0);
             }
 
             try
@@ -77,7 +77,7 @@ namespace MastodonSS.Utility.File
         {
             if (fList == null)
             {
-                return false;
+                return true;
             }
 
             try

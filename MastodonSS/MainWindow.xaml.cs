@@ -44,6 +44,13 @@ namespace MastodonSS
         private string strBackArticle;
         private string strTitle;
 
+        private string strToday {
+            get
+            {
+                return string.Concat(DateTime.Now.ToString("yyyyMMdd"), ".txt");
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -73,7 +80,7 @@ namespace MastodonSS
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             fUtl = new FileUtility();
-            fCls = new FileClass("", string.Concat(DateTime.Now.ToString("yyyyMMdd"), ".txt"));
+            fCls = new FileClass("", strToday);
             backupList = new BackupClass();
 
             backupTimer = new Timer(60000);
@@ -144,11 +151,6 @@ namespace MastodonSS
             {
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            //if (fUtl.AutoBackup(new StringBuilder(strBackArticle), out strException) == false)
-            //{
-            //    MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
         }
         #endregion
 
@@ -252,11 +254,13 @@ namespace MastodonSS
         private void MenuReadText_Click(object sender, RoutedEventArgs e)
         {
             string strContent = "";
-            string strException = "";
-
-            if (fUtl.ReadText(out strContent, out strException) == false)
+            string strException = "ファイルの読み込みに失敗しました";
+            
+            if (fCls.ReadFile(false, out strContent) == false)
             {
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+                StsLblStatus.Content = strException;
+                timeLimit = DateTime.Now.AddSeconds(5);
             }
             else
             {
@@ -274,11 +278,13 @@ namespace MastodonSS
         private void MenuReadBackup_Click(object sender, RoutedEventArgs e)
         {
             string strContent = "";
-            string strException = "";
-
-            if (fUtl.ReadBackupFile(out strContent, out strException) == false)
+            string strException = "バックアップの読み込みに失敗しました";
+            
+            if (fCls.ReadFile(true, out strContent) == false)
             {
                 MessageBox.Show(strException, "失敗", MessageBoxButton.OK, MessageBoxImage.Error);
+                StsLblStatus.Content = strException;
+                timeLimit = DateTime.Now.AddSeconds(5);
             }
             else
             {
@@ -314,9 +320,6 @@ namespace MastodonSS
                 intSeq = int.Parse(txbNo.Text);
             }
 
-            // fUtl.setTitle(strTitle, intSeq);
-
-            // fUtl.SaveFile(new StringBuilder(txbArticle.Text), out strException) == true
             if (fCls.SaveFile(strArticle, strTitle, intSeq) == true)
             {
                 StsLblStatus.Content = "保存に成功しました";

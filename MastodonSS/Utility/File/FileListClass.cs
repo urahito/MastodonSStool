@@ -76,15 +76,14 @@ namespace MastodonSS.Utility.File
             {
                 // 最新ファイルとの比較準備
                 fn = new FileClass(_subDir, fileName);
-                FileClass before = _list.Last();
+                FileClass old = null;
 
                 // 最新ファイルとの比較（ハッシュ比較）
-                if (before.Compare(content) == true)    // 最新ファイルと現在のテキストが同じ
-                {
-                    before = _list.Last();      
-                    if (Remove(before) == true)         // 最新ファイルを削除
+                if (CompareAny(content, out old) == true)    // 過去ファイルと現在のテキストが同じ
+                {     
+                    if (old != null && Remove(old) == true)         // 最新ファイルを削除
                     {
-                        _list.RemoveLast();             // 新しい名前で保存するためリストから削除
+                        _list.Remove(old);             // 新しい名前で保存するためリストから削除
                     }                    
                 }
 
@@ -185,6 +184,29 @@ namespace MastodonSS.Utility.File
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// リストに該当するハッシュ値はあるか
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        private bool CompareAny(string content, out FileClass fCls)
+        {
+            string hashValue = FileClass.GetHash(content);
+            fCls = null;
+
+            if(_list.Count == 0)
+            {
+                return false;
+            }
+            else if (_list.Any(fc => fc.HashValue.Equals(hashValue)))
+            {
+                fCls = _list.Where(fc => fc.HashValue.Equals(hashValue)).First();
+                return true;
+            }
+
+            return false;
         }
 
         #region 使用用途の無いメソッド

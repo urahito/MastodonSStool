@@ -17,6 +17,8 @@ namespace MastodonSS.Utility.File
         private string _filePath;
         private string _hash;
 
+        public string HashValue => _hash;
+
         public FileClass(string subDir, string fileName)
         {
             // ドキュメントフォルダ内に作成
@@ -43,27 +45,29 @@ namespace MastodonSS.Utility.File
 
 
         #region 基本動作
-        public bool Compare(string content)
-        {
-            string thisContent = "";
-            string newHash = "";
+        #region 比較メソッド（廃止予定）
+        //public bool Compare(string content)
+        //{
+        //    string thisContent = "";
+        //    string newHash = "";
 
-            if(_hash.Length == 0)
-            {
-                // 既存のテキストを読み込み
-                using (StreamReader sr = fi.OpenText())
-                {
-                    thisContent = sr.ReadToEnd();
-                    _hash = GetHash(thisContent);
-                }
-            }
+        //    if(_hash.Length == 0)
+        //    {
+        //        // 既存のテキストを読み込み
+        //        using (StreamReader sr = fi.OpenText())
+        //        {
+        //            thisContent = sr.ReadToEnd();
+        //            _hash = GetHash(thisContent);
+        //        }
+        //    }
 
-            newHash = GetHash(content);
+        //    newHash = GetHash(content);
 
-            return (_hash.CompareTo(newHash) == 0);
-        }
+        //    return (_hash.CompareTo(newHash) == 0);
+        //}
+        #endregion
 
-        private string GetHash(string content)
+        public static string GetHash(string content)
         {
             MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
 
@@ -101,6 +105,64 @@ namespace MastodonSS.Utility.File
             return true;
         }
 
+        #region ファイルの読み込み
+        public bool ReadFile(bool isBackup, out string content)
+        {
+            content = "";
+
+            OpenFileDialog pfd = new OpenFileDialog();
+            //pfd.FileName = "";
+            pfd.Title = "読み込み先のファイル名を指定してください";
+
+            if(isBackup)
+            {
+                pfd.InitialDirectory = Path.Combine(_dirPath, "MastodonSS_bak");
+                pfd.Filter = "バックアップファイル(*.bak)|*.bak";
+            }
+            else
+            {
+                pfd.InitialDirectory = _dirPath;
+                pfd.Filter = "txtファイル(*.txt)|*.txt";
+            }
+
+            if (pfd.ShowDialog() == true)
+            {
+                _filePath = pfd.FileName;
+            }
+            else
+            {
+                return true;
+            }
+
+
+            try
+            {
+                using (StreamReader sr = new StreamReader(_filePath))
+                {
+                    content = sr.ReadToEnd();
+                }
+            }
+            #region catch句
+            catch (FileNotFoundException ex)
+            {
+                return false;
+            }
+            catch (IOException ex)
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            #endregion
+
+            return true;
+        }
+        #endregion ファイルの読み込み
+
+
+        #region ファイル書き込み
         /// <summary>
         /// 新規ファイルの作成
         /// </summary>
@@ -207,7 +269,7 @@ namespace MastodonSS.Utility.File
         /// </summary>
         /// <param name="strTitle"></param>
         /// <param name="seqNo"></param>
-        public string getTitle(string strTitle, int seqNo)
+        private string getTitle(string strTitle, int seqNo)
         {
             string seqFormat = Properties.Settings.Default.SequenceFormat;
             string strSeq = "";
@@ -233,6 +295,9 @@ namespace MastodonSS.Utility.File
 
             return fileName;
         }
-        #endregion
+        #endregion ファイル書き込み
+
+
+        #endregion 基本動作
     }
 }
